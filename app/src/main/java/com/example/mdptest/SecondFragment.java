@@ -522,7 +522,7 @@ public class SecondFragment extends Fragment {
         Toast.makeText(getActivity(), stringBuilder.toString(), Toast.LENGTH_LONG).show();
 
         byte[] bytes = stringBuilder.toString().getBytes(Charset.defaultCharset());
-        BluetoothComms.writeMsg(bytes);
+        BluetoothService.writeMsg(bytes);
     }
 
     private String getObstacleString(ImageView obstacle) {
@@ -568,7 +568,7 @@ public class SecondFragment extends Fragment {
 
     private void forwardButtonEvent() {
         byte[] bytes = commands.get("forward").getBytes(Charset.defaultCharset());
-        BluetoothComms.writeMsg(bytes);
+        BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
         ObjectAnimator animator;
@@ -601,7 +601,7 @@ public class SecondFragment extends Fragment {
 
     private void reverseButtonEvent() {
         byte[] bytes = commands.get("reverse").getBytes(Charset.defaultCharset());
-        BluetoothComms.writeMsg(bytes);
+        BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
         ObjectAnimator animator;
@@ -634,7 +634,7 @@ public class SecondFragment extends Fragment {
 
     private void turnRightButtonEvent() {
         byte[] bytes = commands.get("turnRight").getBytes(Charset.defaultCharset());
-        BluetoothComms.writeMsg(bytes);
+        BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
 
@@ -762,7 +762,7 @@ public class SecondFragment extends Fragment {
 
     private void turnLeftButtonEvent() {
         byte[] bytes = commands.get("turnLeft").getBytes(Charset.defaultCharset());
-        BluetoothComms.writeMsg(bytes);
+        BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
 

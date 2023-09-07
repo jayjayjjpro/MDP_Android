@@ -219,7 +219,7 @@ public class BtCheckFragment extends Fragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 byte[] bytes = sendMessage.getText().toString().getBytes(Charset.defaultCharset());
-                BluetoothComms.writeMsg(bytes);
+                BluetoothService.writeMsg(bytes);
                 etChatBox.append(sendMessage.getText().toString()+"\n");
                 sendMessage.setText("");
 
@@ -425,7 +425,7 @@ public class BtCheckFragment extends Fragment {
                         startSearch();
 
                         // Start BluetoothConnectionService to listen for connection
-                        connectIntent = new Intent(getContext(), BluetoothComms.class);
+                        connectIntent = new Intent(getContext(), BluetoothService.class);
                         connectIntent.putExtra("serviceType", "listen");
                         getActivity().startService(connectIntent);
 
