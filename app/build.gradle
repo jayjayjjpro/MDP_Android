@@ -6,7 +6,7 @@ android {
     compileSdk 30
 
     defaultConfig {
-        applicationId "com.example.mdptest"
+        applicationId "com.example.MDPchecklist"
         minSdk 28
         targetSdk 30
         versionCode 1
