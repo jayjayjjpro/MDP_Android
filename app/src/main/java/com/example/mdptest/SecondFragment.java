@@ -630,11 +630,12 @@ public class SecondFragment extends Fragment {
     private void sendObstaclesEvent() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-                .append(getObstacleString(obstacle1)).append(',')
-                .append(getObstacleString(obstacle2)).append(',')
-                .append(getObstacleString(obstacle3)).append(',')
-                .append(getObstacleString(obstacle4)).append(',')
-                .append(getObstacleString(obstacle5));
+                .append("beginImgRec:1")
+                .append(getObstacleString(obstacle1)).append(":2")
+                .append(getObstacleString(obstacle2)).append(":3")
+                .append(getObstacleString(obstacle3)).append(":4")
+                .append(getObstacleString(obstacle4)).append(":5")
+                .append(getObstacleString(obstacle5)).append(':');
         //TODO: get things to be loop;
         Log.d("Sending Obstacles",stringBuilder.toString());
         Toast.makeText(getActivity(), stringBuilder.toString(), Toast.LENGTH_LONG).show();
@@ -687,22 +688,23 @@ public class SecondFragment extends Fragment {
     private String getObstacleString(FrameLayout obstacle) {
         if(obstacle.getY() > 19*SNAP_GRID_INTERVAL){
             //here is the message for RPI and algo to receive;
-            return "O," +
-                    -1 +
+            return
+                    //"O," +
                     ',' +
-                    -1 +
-                    ',' +
-                    getViewOrientation(obstacle) +
-                    " ";
+                            getViewOrientation(obstacle) +
+                            ',' +
+                            -1 +
+                            ',' +
+                            -1;
         }
         else{
-            return "O," +
-                    ((int) obstacle.getX() / SNAP_GRID_INTERVAL) +
-                    ',' +
-                    (19 - ((int) obstacle.getY() / SNAP_GRID_INTERVAL)) +
-                    ',' +
-                    getViewOrientation(obstacle) +
-                    " ";
+            return
+                    //"O," +
+                    ',' + getViewOrientation(obstacle) +
+                            ',' +
+                            ((int) obstacle.getX() / SNAP_GRID_INTERVAL) +
+                            ',' +
+                            (19 - ((int) obstacle.getY() / SNAP_GRID_INTERVAL));
         }
     }
 
