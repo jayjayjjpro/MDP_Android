@@ -56,7 +56,7 @@ public class SecondFragment extends Fragment {
 
     Button resetObstacles;
 
-    ImageButton forwardButton, turnLeftButton, turnRightButton,reverseButton;
+    ImageButton forwardButton, turnLeftButton, turnRightButton,reverseButton, leftReverseButton, rightReverseButton;
 
     ImageView image1, image2, image3, image4, image5;
     FrameLayout obstacle1, obstacle2, obstacle3, obstacle4, obstacle5;
@@ -65,6 +65,8 @@ public class SecondFragment extends Fragment {
     float maxHeight;
     int countOs = 0;
     ImageView car;
+
+    String dataToSave;
 
     Map<Integer, FrameLayout> obstacles;
     Map<Integer, ImageView> images;
@@ -128,7 +130,11 @@ public class SecondFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        if(savedInstanceState != null){
+            dataToSave = savedInstanceState.getString("key");
+        }
         binding = FragmentSecondBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
 
     }
@@ -175,73 +181,6 @@ public class SecondFragment extends Fragment {
             put(4, image4);
             put(5, image5);
         }};
-
-//        I put onclick event inside the onTouch listener,
-//        and when lift my finger(action_up) without long click, it will do things as the ones in original onclick();
-//        obstacle1.setOnClickListener(view -> {
-//
-//            //set pivot point of the view as central of frame layout, for rotation;
-//            if(!isDragging){
-//                obstacle1.getChildAt(1).setPivotX(obstacle1.getWidth()/2.0f);
-//                obstacle1.getChildAt(1).setPivotY(obstacle1.getHeight()/2.0f);
-//
-//                obstacle1.getChildAt(1).setRotation((obstacle1.getChildAt(1).getRotation() + 90) % 360);
-//
-//            }
-//
-//        });
-//
-//        obstacle2.setOnClickListener(view -> {
-//
-//            //set pivot point of the view as central of frame layout, for rotation;
-//            if(!isDragging){
-//                obstacle2.getChildAt(1).setPivotX(obstacle2.getWidth()/2.0f);
-//                obstacle2.getChildAt(1).setPivotY(obstacle2.getHeight()/2.0f);
-//
-//                obstacle2.getChildAt(1).setRotation((obstacle2.getChildAt(1).getRotation() + 90) % 360);
-//
-//            }
-//
-//        });
-//
-//        obstacle3.setOnClickListener(view -> {
-//
-//            //set pivot point of the view as central of frame layout, for rotation;
-//            if(!isDragging){
-//                obstacle3.getChildAt(1).setPivotX(obstacle3.getWidth()/2.0f);
-//                obstacle3.getChildAt(1).setPivotY(obstacle3.getHeight()/2.0f);
-//
-//                obstacle3.getChildAt(1).setRotation((obstacle3.getChildAt(1).getRotation() + 90) % 360);
-//
-//            }
-//
-//        });
-//
-//        obstacle4.setOnClickListener(view -> {
-//
-//            //set pivot point of the view as central of frame layout, for rotation;
-//            if(!isDragging){
-//                obstacle4.getChildAt(1).setPivotX(obstacle4.getWidth()/2.0f);
-//                obstacle4.getChildAt(1).setPivotY(obstacle4.getHeight()/2.0f);
-//
-//                obstacle4.getChildAt(1).setRotation((obstacle4.getChildAt(1).getRotation() + 90) % 360);
-//
-//            }
-//
-//        });
-//
-//        obstacle5.setOnClickListener(view -> {
-//
-//            //set pivot point of the view as central of frame layout, for rotation;
-//            if(!isDragging){
-//                obstacle5.getChildAt(1).setPivotX(obstacle5.getWidth()/2.0f);
-//                obstacle5.getChildAt(1).setPivotY(obstacle5.getHeight()/2.0f);
-//
-//                obstacle5.getChildAt(1).setRotation((obstacle5.getChildAt(1).getRotation() + 90) % 360);
-//
-//            }
-//
-//        });
 
 
 
@@ -600,6 +539,8 @@ public class SecondFragment extends Fragment {
         turnRightButton = getActivity().findViewById(R.id.turnRightButton);
         turnLeftButton = getActivity().findViewById(R.id.turnLeftButton);
         reverseButton = getActivity().findViewById(R.id.reverseButton);
+        leftReverseButton = getActivity().findViewById(R.id.leftReverseButton);
+        rightReverseButton = getActivity().findViewById(R.id.rightReverseButton);
         robot_status = getActivity().findViewById(R.id.RobotStatus);
 
         //set ImageButton resource
@@ -607,6 +548,9 @@ public class SecondFragment extends Fragment {
         turnLeftButton.setImageResource(R.drawable.turn_left);
         turnRightButton.setImageResource(R.drawable.turn_right);
         reverseButton.setImageResource(R.drawable.reverse);
+        leftReverseButton.setImageResource(R.drawable.left_reverse);
+        rightReverseButton.setImageResource(R.drawable.right_reverse);
+
 
         //set TextView box scrollable
         robot_status.setMovementMethod(new ScrollingMovementMethod());
@@ -619,13 +563,22 @@ public class SecondFragment extends Fragment {
         reverseButton.setOnClickListener(view -> reverseButtonEvent());
         turnRightButton.setOnClickListener(view -> turnRightButtonEvent());
         turnLeftButton.setOnClickListener(view -> turnLeftButtonEvent());
+        leftReverseButton.setOnClickListener(view -> LeftReverseButton());
+        rightReverseButton.setOnClickListener(view -> RightReverseButton());
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putString("key", dataToSave);
     }
+
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        binding = null;
+//    }
 
     private void sendObstaclesEvent() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -746,11 +699,11 @@ public class SecondFragment extends Fragment {
     private void carClickEvent() {
         //for testing
         updateRobotPosition(0, 0, 'N');
-        setObstacleID(1,"12");
-        setObstacleID(2,"22");
-        setObstacleID(3,"45");
-        setObstacleID(4,"101");
-        setObstacleID(5,"20");
+//        setObstacleID(1,"12");
+//        setObstacleID(2,"22");
+//        setObstacleID(3,"45");
+//        setObstacleID(4,"101");
+//        setObstacleID(5,"20");
 
         String string = "Car (X: " + (int)car.getX()/SNAP_GRID_INTERVAL + ") " +
                 "(Y: " + (20 - ((int)car.getY() + car.getHeight())/SNAP_GRID_INTERVAL) + ") " +
@@ -760,7 +713,8 @@ public class SecondFragment extends Fragment {
     }
 
     private void forwardButtonEvent() {
-        byte[] bytes = commands.get("forward").getBytes(Charset.defaultCharset());
+        //byte[] bytes = commands.get("forward").getBytes(Charset.defaultCharset());
+        byte[] bytes = String.valueOf('W').getBytes();
         BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
@@ -793,7 +747,8 @@ public class SecondFragment extends Fragment {
     }
 
     private void reverseButtonEvent() {
-        byte[] bytes = commands.get("reverse").getBytes(Charset.defaultCharset());
+        //byte[] bytes = commands.get("reverse").getBytes(Charset.defaultCharset());
+        byte[] bytes = String.valueOf('S').getBytes();
         BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
@@ -826,7 +781,8 @@ public class SecondFragment extends Fragment {
     }
 
     private void turnRightButtonEvent() {
-        byte[] bytes = commands.get("turnRight").getBytes(Charset.defaultCharset());
+        //byte[] bytes = commands.get("turnRight").getBytes(Charset.defaultCharset());
+        byte[] bytes = String.valueOf('E').getBytes();
         BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
@@ -954,7 +910,8 @@ public class SecondFragment extends Fragment {
     }
 
     private void turnLeftButtonEvent() {
-        byte[] bytes = commands.get("turnLeft").getBytes(Charset.defaultCharset());
+        //byte[] bytes = commands.get("turnLeft").getBytes(Charset.defaultCharset());
+        byte[] bytes = String.valueOf('Q').getBytes();
         BluetoothService.writeMsg(bytes);
 
         int orientation = (int) car.getRotation();
@@ -1081,6 +1038,264 @@ public class SecondFragment extends Fragment {
         }
     }
 
+    private void LeftReverseButton(){
+        byte[] bytes = String.valueOf('A').getBytes();
+        BluetoothService.writeMsg(bytes);
+
+        int orientation = (int) car.getRotation();
+
+        ObjectAnimator animatorX;
+        ObjectAnimator animatorY;
+        ObjectAnimator animatorArc;
+        ObjectAnimator rotateAnimator;
+        AnimatorSet animatorSet = new AnimatorSet();
+        Path path = new Path();
+
+        switch (((orientation / 90) % 4 + 4) % 4) {
+            case 0:
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() + SNAP_GRID_INTERVAL);
+                animatorY.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX()- SNAP_GRID_INTERVAL * 4,
+                        car.getY() - SNAP_GRID_INTERVAL,
+                        car.getX(),
+                        car.getY() + SNAP_GRID_INTERVAL * 3,
+                        0f,
+                        90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation + 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() - SNAP_GRID_INTERVAL * 3);
+                animatorX.setDuration(ANIMATOR_DURATION);
+                animatorX.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+
+                break;
+            case 1:
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() - SNAP_GRID_INTERVAL);
+                animatorX.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX() - SNAP_GRID_INTERVAL * 3,
+                        car.getY() - SNAP_GRID_INTERVAL * 4,
+                        car.getX() + SNAP_GRID_INTERVAL,
+                        car.getY(),
+                        90f,
+                        90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation + 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() - SNAP_GRID_INTERVAL * 3);
+                animatorY.setDuration(ANIMATOR_DURATION);
+                animatorY.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+                break;
+            case 2:
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() - SNAP_GRID_INTERVAL);
+                animatorY.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX(),
+                        car.getY() - SNAP_GRID_INTERVAL * 3,
+                        car.getX() + SNAP_GRID_INTERVAL * 4,
+                        car.getY() - SNAP_GRID_INTERVAL,
+                        180f,
+                        90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation + 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() + SNAP_GRID_INTERVAL * 3);
+                animatorX.setDuration(ANIMATOR_DURATION);
+                animatorX.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+                break;
+            case 3:
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() + SNAP_GRID_INTERVAL);
+                animatorX.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX() - SNAP_GRID_INTERVAL,
+                        car.getY(),
+                        car.getX() + SNAP_GRID_INTERVAL * 3,
+                        car.getY() + SNAP_GRID_INTERVAL * 4,
+                        270f,
+                        90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation + 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() + SNAP_GRID_INTERVAL * 3);
+                animatorY.setDuration(ANIMATOR_DURATION);
+                animatorY.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+                break;
+            default:
+                // Shouldn't reach this case
+                break;
+        }
+
+    }
+
+    private void RightReverseButton(){
+        byte[] bytes = String.valueOf('D').getBytes();
+        BluetoothService.writeMsg(bytes);
+
+        int orientation = (int) car.getRotation();
+
+        ObjectAnimator animatorX;
+        ObjectAnimator animatorY;
+        ObjectAnimator animatorArc;
+        ObjectAnimator rotateAnimator;
+        AnimatorSet animatorSet = new AnimatorSet();
+        Path path = new Path();
+
+        switch (((orientation / 90) % 4 + 4) % 4) {
+            case 0:
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() + SNAP_GRID_INTERVAL);
+                animatorY.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX(),
+                        car.getY() - SNAP_GRID_INTERVAL,
+                        car.getX() + SNAP_GRID_INTERVAL * 4,
+                        car.getY() + SNAP_GRID_INTERVAL * 3,
+                        180f,
+                        -90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation - 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() + SNAP_GRID_INTERVAL * 3);
+                animatorX.setDuration(ANIMATOR_DURATION);
+                animatorX.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+                break;
+            case 1:
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() - SNAP_GRID_INTERVAL);
+                animatorX.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX() - SNAP_GRID_INTERVAL * 3,
+                        car.getY(),
+                        car.getX() + SNAP_GRID_INTERVAL,
+                        car.getY() + SNAP_GRID_INTERVAL * 4,
+                        270f,
+                        -90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation - 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() + SNAP_GRID_INTERVAL * 3);
+                animatorY.setDuration(ANIMATOR_DURATION);
+                animatorY.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+                break;
+            case 2:
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() - SNAP_GRID_INTERVAL);
+                animatorY.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX() - SNAP_GRID_INTERVAL * 4,
+                        car.getY() - SNAP_GRID_INTERVAL * 3,
+                        car.getX(),
+                        car.getY() - SNAP_GRID_INTERVAL,
+                        0f,
+                        -90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation - 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() - SNAP_GRID_INTERVAL * 3);
+                animatorX.setDuration(ANIMATOR_DURATION);
+                animatorX.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+                break;
+            case 3:
+                animatorX = ObjectAnimator.ofFloat(car, "x", car.getX() + SNAP_GRID_INTERVAL);
+                animatorX.setDuration(ANIMATOR_DURATION);
+
+                path.arcTo(car.getX() - SNAP_GRID_INTERVAL,
+                        car.getY() - SNAP_GRID_INTERVAL * 4,
+                        car.getX() + SNAP_GRID_INTERVAL * 3,
+                        car.getY(),
+                        90f,
+                        -90f,
+                        true);
+
+                animatorArc = ObjectAnimator.ofFloat(car, View.X, View.Y, path);
+                animatorArc.setDuration(ANIMATOR_DURATION);
+                animatorArc.setStartDelay(ANIMATOR_DURATION);
+
+                rotateAnimator = ObjectAnimator.ofFloat(car, "rotation", orientation, orientation - 90);
+                rotateAnimator.setDuration(ANIMATOR_DURATION);
+                rotateAnimator.setStartDelay(ANIMATOR_DURATION);
+
+                animatorY = ObjectAnimator.ofFloat(car, "y", car.getY() - SNAP_GRID_INTERVAL * 3);
+                animatorY.setDuration(ANIMATOR_DURATION);
+                animatorY.setStartDelay(ANIMATOR_DURATION * 2);
+
+                animatorSet.playTogether(animatorY, animatorArc, rotateAnimator, animatorX);
+                animatorSet.start();
+                break;
+            default:
+                // Shouldn't reach this case
+                break;
+        }
+    }
+
     //TODO: not set obstacle image, just set the target ID text in the white color;
     private void setObstacleID(int obstacleNumber, String imageID){
         TextView obstacleID = (TextView)obstacles.get(obstacleNumber).getChildAt(2);
@@ -1108,10 +1323,6 @@ public class SecondFragment extends Fragment {
     //private void updateRobot(int x, int y, char direction, String status){}
     //otherwise maybe get another receiver case to get status;
     private void updateRobotPosition(int x, int y, char direction) {
-
-        //x or y will be amended as the left rear wheel should be the basement;
-        //car.setX(x * SNAP_GRID_INTERVAL);
-        //car.setY((20 - y) * SNAP_GRID_INTERVAL - car.getHeight());
 
         switch (direction) {
             case 'N':
@@ -1193,6 +1404,15 @@ public class SecondFragment extends Fragment {
                     //setObstacleImage(obstacleNumber,targetId);
                     //update the obstacle with updating textview;
                     setObstacleID(obstacleNumber,imageID);
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("Target ")
+                            .append(obstacleNumber)
+                            .append(" updated successfully");
+
+                    byte[] bytes = stringBuilder.toString().getBytes(Charset.defaultCharset());
+                    BluetoothService.writeMsg(bytes);
+
                     break;
                 default:
                     break;

@@ -242,7 +242,7 @@
         app:layout_constraintHorizontal_bias="0.109"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.875" />
+        app:layout_constraintVertical_bias="0.873" />
 
     <ImageButton
         android:id="@+id/turnLeftButton"
@@ -254,7 +254,7 @@
         app:layout_constraintHorizontal_bias="0.028"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.925" />
+        app:layout_constraintVertical_bias="0.874" />
 
     <ImageButton
         android:id="@+id/turnRightButton"
@@ -266,7 +266,7 @@
         app:layout_constraintHorizontal_bias="0.19"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.924"/>
+        app:layout_constraintVertical_bias="0.874" />
 
     <ImageButton
         android:id="@+id/reverseButton"
@@ -278,7 +278,31 @@
         app:layout_constraintHorizontal_bias="0.109"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.973" />
+        app:layout_constraintVertical_bias="0.941" />
+
+    <ImageButton
+        android:id="@+id/leftReverseButton"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.028"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.941" />
+
+    <ImageButton
+        android:id="@+id/rightReverseButton"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.94" />
 
     <TextView
         android:id="@+id/RobotStatus"
