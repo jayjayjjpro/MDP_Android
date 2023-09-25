@@ -48,6 +48,8 @@ public class SecondFragment extends Fragment {
     private boolean isObstacle4LongClicked = false;
     private boolean isObstacle5LongClicked = false;
 
+    private String lastReceivedMessage = null;
+
     private boolean isDragging = false;
 
     private int sequence = 0;
@@ -665,16 +667,16 @@ public class SecondFragment extends Fragment {
     private String getViewOrientation(FrameLayout obstacle) {
         switch (((int) ((obstacle.getChildAt(1).getRotation() / 90) % 4 + 4) % 4)) {
             case 0:
-                return "N";
+                return "n";
             case 1:
-                return "E";
+                return "e";
             case 2:
-                return "S";
+                return "s";
             case 3:
-                return "W";
+                return "w";
             default:
                 // Shouldn't reach this case
-                return "X";
+                return "x";
         }
     }
 
@@ -1371,52 +1373,56 @@ public class SecondFragment extends Fragment {
 
             Log.d("msg", message);
 
-            String command = message.substring(0, message.indexOf(','));
+            if(!message.equals(lastReceivedMessage)){
+                String command = message.substring(0, message.indexOf(','));
 
-            switch (command) {
-                case "ROBOT":
-                    String[] parts = message.split(",");
+                switch (command) {
+                    case "ROBOT":
+                        String[] parts = message.split(",");
 
-                    int x = Integer.parseInt(parts[1]);
-                    int y = Integer.parseInt(parts[2]);
-                    char direction = parts[3].charAt(0);
+                        int x = Integer.parseInt(parts[1]);
+                        int y = Integer.parseInt(parts[2]);
+                        char direction = parts[3].charAt(0);
 
-                    Log.d("ROBOT", "(x: " + x + ") (y: " + y + ") (direction: " + direction + ")");
+                        Log.d("ROBOT", "(x: " + x + ") (y: " + y + ") (direction: " + direction + ")");
 
 
 
-                    updateRobotPosition(x, y, direction);
-                    break;
+                        updateRobotPosition(x, y, direction);
+                        break;
 
-                //car status receiver part and corresponding textview box for this;
-                case "STATUS":
-                    String status = message.substring((message.indexOf(',') + 1));
-                    updateRobotStatus(status);
-                    break;
+                    //car status receiver part and corresponding textview box for this;
+                    case "STATUS":
+                        String status = message.substring((message.indexOf(',') + 1));
+                        updateRobotStatus(status);
+                        break;
 
-                case "TARGET":
-                    int obstacleNumber = Character.getNumericValue(message.charAt(7));
-                    //String targetId = message.substring(9);
-                    String imageID = message.substring(9);
+                    case "TARGET":
+                        int obstacleNumber = Character.getNumericValue(message.charAt(7));
 
-                    Log.d("TARGET", "(obstacleNumber: " + obstacleNumber + ") (targetId: " + imageID + ")");
+                        String imageID = message.substring(9);
 
-                    //setObstacleImage(obstacleNumber,targetId);
-                    //update the obstacle with updating textview;
-                    setObstacleID(obstacleNumber,imageID);
+                        Log.d("TARGET", "(obstacleNumber: " + obstacleNumber + ") (targetId: " + imageID + ")");
 
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("Target ")
-                            .append(obstacleNumber)
-                            .append(" updated successfully");
+                        //setObstacleImage(obstacleNumber,targetId);
+                        //update the obstacle with updating textview;
+                        setObstacleID(obstacleNumber,imageID);
 
-                    byte[] bytes = stringBuilder.toString().getBytes(Charset.defaultCharset());
-                    BluetoothService.writeMsg(bytes);
+                        StringBuilder stringBack = new StringBuilder();
+                        stringBack.append("Target ")
+                                .append(obstacleNumber)
+                                .append(" updated successfully");
 
-                    break;
-                default:
-                    break;
+                        byte[] bytes = stringBack.toString().getBytes(Charset.defaultCharset());
+                        BluetoothService.writeMsg(bytes);
+
+                        break;
+                    default:
+                        break;
+                }
             }
+            lastReceivedMessage = message;
+
         }
     };
 }
