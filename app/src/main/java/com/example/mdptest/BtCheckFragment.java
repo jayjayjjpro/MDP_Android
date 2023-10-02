@@ -306,10 +306,10 @@ public class BtCheckFragment extends Fragment {
 
 
 
-        //LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(myReceiver);
-        getActivity().unregisterReceiver(myReceiver);
-        //LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(btConnectionReceiver);
-        getActivity().unregisterReceiver(btConnectionReceiver);
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(myReceiver);
+//        getActivity().unregisterReceiver(myReceiver);
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(btConnectionReceiver);
+//        getActivity().unregisterReceiver(btConnectionReceiver);
 
     }
 

@@ -54,9 +54,12 @@ public class SecondFragment extends Fragment {
 
     private int sequence = 0;
 
+    private String[] checkUpdate =new String[5];
+    private int checki = 0;
+
     Button sendObstaclesButton;
 
-    Button resetObstacles;
+    ImageButton resetObstacles;
 
     ImageButton forwardButton, turnLeftButton, turnRightButton,reverseButton, leftReverseButton, rightReverseButton;
 
@@ -184,7 +187,10 @@ public class SecondFragment extends Fragment {
             put(5, image5);
         }};
 
-
+        while(checki < 5){
+            checkUpdate[checki] = "";
+            checki++;
+        }
 
         obstacle1.setOnLongClickListener(view -> {
             isObstacle1LongClicked = true;
@@ -576,11 +582,11 @@ public class SecondFragment extends Fragment {
         savedInstanceState.putString("key", dataToSave);
     }
 
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding = null;
-//    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 
     private void sendObstaclesEvent() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -607,8 +613,8 @@ public class SecondFragment extends Fragment {
         }
         else{
             strBuilder.append(obstacleNum).append(',')
-                    .append((int)obstacles.get(obstacleNum).getX()/SNAP_GRID_INTERVAL).append(',')
-                    .append(19-(int)obstacles.get(obstacleNum).getY()/SNAP_GRID_INTERVAL)
+                    .append((int)obstacles.get(obstacleNum).getX()/SNAP_GRID_INTERVAL + 1).append(',')
+                    .append(20-(int)obstacles.get(obstacleNum).getY()/SNAP_GRID_INTERVAL)
                     .append(',')
                     .append(getViewOrientation(obstacles.get(obstacleNum)));
         }
@@ -657,9 +663,9 @@ public class SecondFragment extends Fragment {
                     //"O," +
                     ',' + getViewOrientation(obstacle) +
                             ',' +
-                            ((int) obstacle.getX() / SNAP_GRID_INTERVAL) +
+                            ((int) obstacle.getX() / SNAP_GRID_INTERVAL + 1) +
                             ',' +
-                            (19 - ((int) obstacle.getY() / SNAP_GRID_INTERVAL));
+                            (20 - ((int) obstacle.getY() / SNAP_GRID_INTERVAL));
         }
     }
 
@@ -1376,9 +1382,10 @@ public class SecondFragment extends Fragment {
             if(!message.equals(lastReceivedMessage)){
                 String command = message.substring(0, message.indexOf(','));
 
+                String[] parts = message.split(",");
+
                 switch (command) {
                     case "ROBOT":
-                        String[] parts = message.split(",");
 
                         int x = Integer.parseInt(parts[1]);
                         int y = Integer.parseInt(parts[2]);
@@ -1398,23 +1405,31 @@ public class SecondFragment extends Fragment {
                         break;
 
                     case "TARGET":
-                        int obstacleNumber = Character.getNumericValue(message.charAt(7));
 
-                        String imageID = message.substring(9);
+                        int obstacleNumber = Integer.parseInt(parts[1]);
+                        String imageID = parts[2];
 
-                        Log.d("TARGET", "(obstacleNumber: " + obstacleNumber + ") (targetId: " + imageID + ")");
+                        //int obstacleNumber = Character.getNumericValue(message.charAt(7));
 
-                        //setObstacleImage(obstacleNumber,targetId);
-                        //update the obstacle with updating textview;
-                        setObstacleID(obstacleNumber,imageID);
+                        //String imageID = message.substring(9);
 
-                        StringBuilder stringBack = new StringBuilder();
-                        stringBack.append("Target ")
-                                .append(obstacleNumber)
-                                .append(" updated successfully");
+                        if(!checkUpdate[obstacleNumber - 1].equals(imageID)){
+                            Log.d("TARGET", "(obstacleNumber: " + obstacleNumber + ") (targetId: " + imageID + ")");
 
-                        byte[] bytes = stringBack.toString().getBytes(Charset.defaultCharset());
-                        BluetoothService.writeMsg(bytes);
+                            //setObstacleImage(obstacleNumber,targetId);
+                            //update the obstacle with updating textview;
+                            setObstacleID(obstacleNumber,imageID);
+
+                            StringBuilder stringBack = new StringBuilder();
+                            stringBack.append("Target ")
+                                    .append(obstacleNumber)
+                                    .append(" updated successfully");
+
+                            byte[] bytes = stringBack.toString().getBytes(Charset.defaultCharset());
+                            BluetoothService.writeMsg(bytes);
+
+                            checkUpdate[obstacleNumber - 1] = imageID;
+                        }
 
                         break;
                     default:
