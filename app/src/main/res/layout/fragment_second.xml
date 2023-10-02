@@ -12,67 +12,179 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/obstacle1"
+    <FrameLayout
+        android:id="@+id/combo1"
         android:layout_width="40px"
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/obstacle2"
+        app:layout_constraintEnd_toStartOf="@+id/combo2"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8"
-        app:srcCompat="@drawable/obstacle_1_n" />
+        app:layout_constraintVertical_bias="0.8">
 
-    <ImageView
-        android:id="@+id/obstacle2"
+        <!-- ImageView for the image -->
+        <ImageView
+            android:id="@+id/obstacle1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/obstacle1"
+            android:scaleType="centerCrop" />
+
+        <!-- View for the yellow line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5px"
+            android:background="@color/yellow_color" />
+        <!-- TextView to show image ID -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/combo2"
         android:layout_width="40px"
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/obstacle3"
+        app:layout_constraintEnd_toStartOf="@+id/combo3"
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8"
-        app:srcCompat="@drawable/obstacle_2_n" />
+        app:layout_constraintVertical_bias="0.8">
 
-    <ImageView
-        android:id="@+id/obstacle3"
+        <!-- ImageView for the image -->
+        <ImageView
+            android:id="@+id/obstacle2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/obstacle2"
+            android:scaleType="centerCrop" />
+
+        <!-- View for the yellow line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5px"
+            android:background="@color/yellow_color" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/combo3"
         android:layout_width="40px"
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8"
-        app:srcCompat="@drawable/obstacle_3_n" />
+        app:layout_constraintVertical_bias="0.8">
 
-    <ImageView
-        android:id="@+id/obstacle4"
+        <!-- ImageView for the image -->
+        <ImageView
+            android:id="@+id/obstacle3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/obstacle3"
+            android:scaleType="centerCrop" />
+
+        <!-- View for the yellow line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5px"
+            android:background="@color/yellow_color" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/combo4"
         android:layout_width="40px"
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toEndOf="@+id/obstacle3"
+        app:layout_constraintStart_toEndOf="@+id/combo3"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8"
-        app:srcCompat="@drawable/obstacle_4_n" />
+        app:layout_constraintVertical_bias="0.8">
 
-    <ImageView
-        android:id="@+id/obstacle5"
+        <!-- ImageView for the image -->
+        <ImageView
+            android:id="@+id/obstacle4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/obstacle4"
+            android:scaleType="centerCrop" />
+
+        <!-- View for the yellow line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5px"
+            android:background="@color/yellow_color" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/combo5"
         android:layout_width="40px"
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toEndOf="@+id/obstacle4"
+        app:layout_constraintStart_toEndOf="@+id/combo4"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8"
-        app:srcCompat="@drawable/obstacle_5_n"  />
+        app:layout_constraintVertical_bias="0.8">
+
+        <!-- ImageView for the image -->
+        <ImageView
+            android:id="@+id/obstacle5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/obstacle5"
+            android:scaleType="centerCrop" />
+
+        <!-- View for the yellow line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5px"
+            android:background="@color/yellow_color" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
 
     <ImageView
         android:id="@+id/car"
@@ -83,7 +195,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.696"
+        app:layout_constraintVertical_bias="0.713"
         app:srcCompat="@drawable/car" />
 
     <Button
@@ -97,6 +209,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9" />
 
+    <ImageButton
+        android:id="@+id/resetObstaclesButton"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:background="@color/white"
+        android:src="@drawable/refresh"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toEndOf="@+id/sendObstaclesButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89" />
+
     <Button
         android:id="@+id/button_second"
         android:layout_width="wrap_content"
@@ -108,52 +233,93 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.98" />
 
-    <Button
+    <ImageButton
         android:id="@+id/forwardButton"
-        android:layout_width="160px"
+        android:layout_width="60px"
         android:layout_height="60px"
-        android:text="Forward"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.114"
+        app:layout_constraintHorizontal_bias="0.109"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.877" />
+        app:layout_constraintVertical_bias="0.873" />
 
-    <Button
+    <ImageButton
         android:id="@+id/turnLeftButton"
-        android:layout_width="140px"
+        android:layout_width="60px"
         android:layout_height="60px"
-        android:text="Turn Left"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintHorizontal_bias="0.028"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.927" />
+        app:layout_constraintVertical_bias="0.874" />
 
-    <Button
+    <ImageButton
         android:id="@+id/turnRightButton"
-        android:layout_width="140px"
+        android:layout_width="60px"
         android:layout_height="60px"
-        android:text="Turn Right"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.236"
+        app:layout_constraintHorizontal_bias="0.19"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.927" />
+        app:layout_constraintVertical_bias="0.874" />
 
-    <Button
+    <ImageButton
         android:id="@+id/reverseButton"
-        android:layout_width="160px"
+        android:layout_width="60px"
         android:layout_height="60px"
-        android:text="Reverse"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.114"
+        app:layout_constraintHorizontal_bias="0.109"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.977" />
+        app:layout_constraintVertical_bias="0.941" />
+
+    <ImageButton
+        android:id="@+id/leftReverseButton"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.028"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.941" />
+
+    <ImageButton
+        android:id="@+id/rightReverseButton"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.94" />
+
+    <TextView
+        android:id="@+id/RobotStatus"
+        android:layout_width="240px"
+        android:layout_height="40px"
+        android:background="@color/white"
+        android:scrollbars="vertical|horizontal"
+        android:text="RobotStatus: None"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.961"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

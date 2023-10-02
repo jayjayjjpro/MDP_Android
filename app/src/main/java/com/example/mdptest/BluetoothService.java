@@ -7,17 +7,38 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 public class BluetoothService extends IntentService {
     private static final String TAG = "BtService";
     private static final String NAME = "MDPTest";
+
+
+
+// BLuetooth comms
+    private static final String TAG2 = "BluetoothChat";
+
+
+    // Declarations
+    private static Context myContext;
+    private static BluetoothSocket mySocket;
+    private static InputStream myInputStream;
+    private static OutputStream myOutPutStream;
+    private static BluetoothDevice myBtConnectionDevice;
+
+
+
     /**
      * @param
      *
@@ -29,6 +50,40 @@ public class BluetoothService extends IntentService {
     private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private UUID deviceUUID;
     Context mContext;
+
+    private Handler reconnectHandler = new Handler();
+    private static final long RECONNECT_DELAY = 5000; // Delay for 5 seconds
+
+    private int reconnectAttempts = 0;
+    private static final int MAX_RECONNECT_ATTEMPTS = 5;
+
+    //reconnect mechanism
+    private Runnable reconnectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
+                showToast("Max reconnect attempts reached. Stopping reconnection.");
+                return;
+            }
+
+            if (mmDevice != null) {
+                reconnectAttempts++; // Increase the reconnect attempt count
+                showToast("Attempting to reconnect. Attempt " + reconnectAttempts + " of " + MAX_RECONNECT_ATTEMPTS);
+                startClient(mmDevice, deviceUUID);
+            } else {
+                showToast("Device not available. Retrying in " + (RECONNECT_DELAY / 1000) + " seconds.");
+                reconnectHandler.postDelayed(this, RECONNECT_DELAY * (reconnectAttempts + 1)); // Increase delay progressively
+            }
+        }
+    };
+
+    // Method to show toast messages
+    private void showToast(String message) {
+        Handler mainHandler = new Handler(mContext.getMainLooper());
+        mainHandler.post(() -> {
+            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+        });
+    }
 
 
     public BluetoothService() {
@@ -94,17 +149,18 @@ public class BluetoothService extends IntentService {
                 Log.d(TAG, "Run: RFCOM server socket accepted connection");
 
                 // Start BluetoothChat
-                BluetoothComms.connected(socket, mmDevice, mContext);
+                BluetoothService.connected(socket, mmDevice, mContext);
 
 
             } catch (IOException e) {
-
                 connectionStatusIntent = new Intent("btConnectionStatus");
                 connectionStatusIntent.putExtra("ConnectionStatus", "connectionFail");
-                connectionStatusIntent.putExtra("Device",  BtCheckFragment.getBluetoothDevice());
-
+                connectionStatusIntent.putExtra("Device", BtCheckFragment.getBluetoothDevice());
                 Log.d(TAG, "AcceptThread: Connection Failed ,IOException: " + e.getMessage());
+                // Start reconnecting mechanism
+                reconnectHandler.postDelayed(reconnectRunnable, RECONNECT_DELAY);
             }
+
 
             Log.d(TAG, "Ended AcceptThread");
 
@@ -173,7 +229,7 @@ public class BluetoothService extends IntentService {
                 Log.d(TAG, "run: ConnectThread connected");
 
                 // Start BluetoothChat
-                BluetoothComms.connected(mmSocket, mmDevice, mContext);
+                BluetoothService.connected(mmSocket, mmDevice, mContext);
 
                 // Cancel myAcceptThread for listening
                 if (myAcceptThread != null) {
@@ -182,26 +238,21 @@ public class BluetoothService extends IntentService {
                 }
 
             } catch (IOException e) {
-
-                // Close socket on error
                 try {
                     mmSocket.close();
-
                     connectionStatusIntent = new Intent("btConnectionStatus");
                     connectionStatusIntent.putExtra("ConnectionStatus", "connectionFail");
                     connectionStatusIntent.putExtra("Device", mmDevice);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(connectionStatusIntent);
                     Log.d(TAG, "run: Socket Closed: Connection Failed!! " + e.getMessage());
-
                 } catch (IOException e1) {
                     Log.d(TAG, "myConnectThread, run: Unable to close socket connection: " + e1.getMessage());
                 }
-
+                // Start reconnecting mechanism
+                reconnectHandler.postDelayed(reconnectRunnable, RECONNECT_DELAY);
             }
 
-            try {
-
-            } catch (NullPointerException e) {
+ catch (NullPointerException e) {
                 e.printStackTrace();
             }
             }
@@ -249,4 +300,123 @@ public class BluetoothService extends IntentService {
         mConnectThread = new ConnectThread(device, uuid);
         mConnectThread.start();
     }
+
+    //Bluetooth comms methods
+    public static BluetoothDevice getBluetoothDevice(){
+        return myBtConnectionDevice;
+    }
+
+    // Start Bluetooth Chat
+    public static void startComms(BluetoothSocket socket) {
+
+        Log.d(TAG2, "ConnectedThread: Starting");
+
+        mySocket = socket;
+        InputStream tempIn = null;
+        OutputStream tempOut = null;
+
+
+        try {
+            tempIn = mySocket.getInputStream();
+            tempOut = mySocket.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        myInputStream = tempIn;
+        myOutPutStream = tempOut;
+
+
+        // Buffer store for the stream
+        byte[] buffer = new byte[1024];
+
+        // Bytes returned from the read()
+        int bytes;
+
+        while (true) {
+            // Read from the InputStream
+            try {
+                bytes = myInputStream.read(buffer);
+                String incomingMessage = new String(buffer, 0, bytes);
+                Log.d(TAG2, "InputStream: " + incomingMessage);
+
+                // Broadcast Incoming Message
+                Intent incomingMsgIntent = new Intent("IncomingMsg");
+                incomingMsgIntent.putExtra("receivingMsg", incomingMessage);
+                LocalBroadcastManager.getInstance(myContext).sendBroadcast(incomingMsgIntent);
+
+
+            } catch (IOException e) {
+
+                // Broadcast Connection Message
+                Intent connectionStatusIntent = new Intent("btConnectionStatus");
+                connectionStatusIntent.putExtra("ConnectionStatus", "disconnect");
+                connectionStatusIntent.putExtra("Device", myBtConnectionDevice);
+                LocalBroadcastManager.getInstance(myContext).sendBroadcast(connectionStatusIntent);
+
+                Log.d(TAG2, "CHAT SERVICE: Closed!!!");
+                e.printStackTrace();
+                break;
+
+            } catch (Exception e){
+                Log.d(TAG2, "CHAT SERVICE: Closed 2!!!: "+ e);
+                e.printStackTrace();
+
+            }
+
+
+        }
+    }
+
+
+    // To write outgoing bluetooth messages
+    public static void write(byte[] bytes) {
+
+        String text = new String(bytes, Charset.defaultCharset());
+        Log.d(TAG2, "Write: Writing to outputstream: " + text);
+
+        try {
+            myOutPutStream.write(bytes);
+        } catch (Exception e) {
+            Log.d(TAG2, "Write: Error writing to output stream: " + e.getMessage());
+        }
+    }
+
+
+    // To shut down bluetooth connection
+    public void cancel() {
+        try {
+            mySocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    // To start Communication
+    static void connected(BluetoothSocket mySocket, BluetoothDevice myDevice, Context context) {
+        Log.d(TAG2, "Connected: Starting");
+
+
+        myBtConnectionDevice = myDevice;
+        myContext = context;
+        //Start thread to manage the connection and perform transmissions
+        startComms(mySocket);
+
+
+    }
+
+    /*
+        Write to ConnectedThread in an unsynchronised manner
+    */
+    public static void writeMsg(byte[] out) {
+
+        Log.d(TAG2, "write: Write Called.");
+        write(out);
+
+    }
+
+
+
+
 }
