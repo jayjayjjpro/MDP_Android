@@ -376,6 +376,7 @@ public class BluetoothService extends IntentService {
 
         try {
             myOutPutStream.write(bytes);
+            myOutPutStream.flush();
         } catch (Exception e) {
             Log.d(TAG2, "Write: Error writing to output stream: " + e.getMessage());
         }

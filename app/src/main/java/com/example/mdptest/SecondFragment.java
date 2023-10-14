@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Path;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -16,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,8 +32,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.mdptest.databinding.FragmentSecondBinding;
 
 import java.nio.charset.Charset;
+import java.util.Currency;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.example.mdptest.DBHelper;
 
 public class SecondFragment extends Fragment {
 
@@ -47,6 +53,9 @@ public class SecondFragment extends Fragment {
     private boolean isObstacle3LongClicked = false;
     private boolean isObstacle4LongClicked = false;
     private boolean isObstacle5LongClicked = false;
+    private boolean isObstacle6LongClicked = false;
+    private boolean isObstacle7LongClicked = false;
+    private boolean isObstacle8LongClicked = false;
 
     private String lastReceivedMessage = null;
 
@@ -54,34 +63,36 @@ public class SecondFragment extends Fragment {
 
     private int sequence = 0;
 
-    private String[] checkUpdate =new String[5];
+    private String[] checkUpdate =new String[8];
     private int checki = 0;
+    private int checkOBStr = 0;
 
-    Button sendObstaclesButton;
+    Button sendObstaclesButton, startbtn;
 
-    ImageButton resetObstacles;
+    ImageButton resetObstacles, putObstacles;
 
     ImageButton forwardButton, turnLeftButton, turnRightButton,reverseButton, leftReverseButton, rightReverseButton;
 
-    ImageView image1, image2, image3, image4, image5;
-    FrameLayout obstacle1, obstacle2, obstacle3, obstacle4, obstacle5;
+    ImageView image1, image2, image3, image4, image5, image6, image7, image8;
+    FrameLayout obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6,obstacle7,obstacle8;
     TextView robot_status;
-    float maxWidth;
+    float maxWidth, reloadx,reloady;
     float maxHeight;
     int countOs = 0;
     ImageView car;
-
-    String dataToSave;
-
     Map<Integer, FrameLayout> obstacles;
     Map<Integer, ImageView> images;
 
-    Map<String, String> commands = new HashMap<String, String>() {{
-        put("forward", "0100");
-        put("reverse", "0101");
-        put("turnLeft", "0902");
-        put("turnRight", "0903");
-    }};
+    EditText startmessage;
+
+    DBHelper dbHelper;
+
+//    Map<String, String> commands = new HashMap<String, String>() {{
+//        put("forward", "0100");
+//        put("reverse", "0101");
+//        put("turnLeft", "0902");
+//        put("turnRight", "0903");
+//    }};
 
     Map<String, Integer> resources = new HashMap<String, Integer>() {{
         put("o1", R.drawable.obstacle1);
@@ -130,23 +141,65 @@ public class SecondFragment extends Fragment {
         put("circle", R.drawable.circle);
     }};
 
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+
+        FrameLayout frameLayout1 = getView().findViewById(R.id.combo1);
+        savedInstanceState.putFloat("test",frameLayout1.getX());
+        savedInstanceState.putFloat("testY",frameLayout1.getY());
+//        countOs = 0;
+//        while(countOs < 8){
+//            savedInstanceState.putFloat("framelayout"+(countOs+1) + "x",obstacles.get(countOs+1).getX());
+//            savedInstanceState.putFloat("framelayout"+(countOs+1)+ "y",obstacles.get(countOs+1).getY());
+//            countOs++;
+//        }
+//        countOs = 0;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Initialize the DBHelper with the fragment's context
+        dbHelper = new DBHelper(requireContext());
+    }
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        if(savedInstanceState != null){
-            dataToSave = savedInstanceState.getString("key");
-        }
         binding = FragmentSecondBinding.inflate(inflater, container, false);
+//        obstacle1 = getActivity().findViewById(R.id.combo1);
+//        if(savedInstanceState != null){
+//
+////            obstacle1 = getActivity().findViewById(R.id.combo1);
+//
+//            reloadx = savedInstanceState.getFloat("test");
+//            reloady = savedInstanceState.getFloat("testY");
+//            obstacle1.setX(reloadx);
+//            obstacle1.setY(reloady);
 
+//            countOs = 0;
+//            while(countOs < 8){
+//                reloadx = savedInstanceState.getFloat("framelayout"+(countOs+1)+"x");
+//                reloady = savedInstanceState.getFloat("framelayout"+(countOs+1)+"y");
+//
+//                obstacles.get(countOs+1).setX(reloadx);
+//                obstacles.get(countOs+1).setY(reloady);
+//                countOs++;
+//            }
+//            countOs = 0;
+//        }
+
+//        dbHelper.Clean(); // for test
         return binding.getRoot();
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
     public void onViewCreated(@NonNull View f, Bundle savedInstanceState) {
         super.onViewCreated(f, savedInstanceState);
+
 
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +217,9 @@ public class SecondFragment extends Fragment {
         obstacle3 = getActivity().findViewById(R.id.combo3);
         obstacle4 = getActivity().findViewById(R.id.combo4);
         obstacle5 = getActivity().findViewById(R.id.combo5);
+        obstacle6 = getActivity().findViewById(R.id.combo6);
+        obstacle7 = getActivity().findViewById(R.id.combo7);
+        obstacle8 = getActivity().findViewById(R.id.combo8);
 
         obstacles = new HashMap<Integer, FrameLayout>() {{
             put(1, obstacle1);
@@ -171,7 +227,52 @@ public class SecondFragment extends Fragment {
             put(3, obstacle3);
             put(4, obstacle4);
             put(5, obstacle5);
+            put(6, obstacle6);
+            put(7, obstacle7);
+            put(8, obstacle8);
         }};
+
+//        if(!dbHelper.checkEmpty()){
+//            List<Obstacle> dataList = dbHelper.getAllData();
+//
+//            // Now, you have a list of Obstacle objects containing the retrieved data
+//            for (Obstacle data : dataList) {
+//                int id = data.getId();
+//                int x = data.getX();
+//                int y = data.getY();
+//                String direction = data.getDirection();
+//
+//                // Do something with the retrieved data, such as displaying it in your app
+//                obstacles.get(id).setX(x*SNAP_GRID_INTERVAL);
+//                obstacles.get(id).setY((20-y)*SNAP_GRID_INTERVAL);
+//                switch(direction){
+//                    case "n": obstacles.get(id).getChildAt(1).setRotation(0);
+//                    case "e": obstacles.get(id).getChildAt(1).setRotation(90);
+//                    case "s": obstacles.get(id).getChildAt(1).setRotation(180);
+//                    case "w": obstacles.get(id).getChildAt(1).setRotation(270);
+//                }
+//                // For example, you can log the data:
+//                Log.d("ObstacleData", "ID: " + id + ", X: " + x + ", Y: " + y + ", Direction: " + direction);
+//            }
+//        }
+
+//        if(savedInstanceState != null){
+//            reloadx = savedInstanceState.getFloat("test");
+//            reloady = savedInstanceState.getFloat("testY");
+//            obstacle1.setX(reloadx);
+//            obstacle1.setY(reloady);
+
+//            countOs = 0;
+//            while(countOs < 8){
+//                reloadx = savedInstanceState.getFloat("framelayout"+(countOs+1)+"x");
+//                reloady = savedInstanceState.getFloat("framelayout"+(countOs+1)+"y");
+//
+//                obstacles.get(countOs+1).setX(reloadx);
+//                obstacles.get(countOs+1).setY(reloady);
+//                countOs++;
+//            }
+//            countOs = 0;
+//        }
 
         image1 = getActivity().findViewById(R.id.obstacle1);
         image2 = getActivity().findViewById(R.id.obstacle2);
@@ -187,7 +288,7 @@ public class SecondFragment extends Fragment {
             put(5, image5);
         }};
 
-        while(checki < 5){
+        while(checki < 8){
             checkUpdate[checki] = "";
             checki++;
         }
@@ -219,6 +320,24 @@ public class SecondFragment extends Fragment {
 
         obstacle5.setOnLongClickListener(view -> {
             isObstacle5LongClicked = true;
+            isDragging = true;
+            return false;
+        });
+
+        obstacle6.setOnLongClickListener(view -> {
+            isObstacle6LongClicked = true;
+            isDragging = true;
+            return false;
+        });
+
+        obstacle7.setOnLongClickListener(view -> {
+            isObstacle7LongClicked = true;
+            isDragging = true;
+            return false;
+        });
+
+        obstacle8.setOnLongClickListener(view -> {
+            isObstacle8LongClicked = true;
             isDragging = true;
             return false;
         });
@@ -267,6 +386,8 @@ public class SecondFragment extends Fragment {
 
                         //this will send obstacle info once I lift my finger?
                         sendObstaclesOneTime(1);
+                        Log.d("SecondFragment", "TEST: Insert first data");
+                        dbHelper.insertData(1,(int)obstacles.get(1).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(1).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle1));
                         isDragging = false;
                         break;
                     default:
@@ -330,6 +451,7 @@ public class SecondFragment extends Fragment {
                         isObstacle2LongClicked = false;
 
                         sendObstaclesOneTime(2);
+                        dbHelper.insertData(2,(int)obstacles.get(2).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(2).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle2));
                         isDragging = false;
                         break;
                     default:
@@ -392,6 +514,7 @@ public class SecondFragment extends Fragment {
                         isObstacle3LongClicked = false;
 
                         sendObstaclesOneTime(3);
+                        dbHelper.insertData(3,(int)obstacles.get(3).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(3).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle3));
                         isDragging = false;
                         break;
                     default:
@@ -454,6 +577,7 @@ public class SecondFragment extends Fragment {
                         isObstacle4LongClicked = false;
 
                         sendObstaclesOneTime(4);
+                        dbHelper.insertData(4,(int)obstacles.get(4).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(4).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle4));
                         isDragging = false;
                         break;
                     default:
@@ -516,6 +640,7 @@ public class SecondFragment extends Fragment {
                         isObstacle5LongClicked = false;
 
                         sendObstaclesOneTime(5);
+                        dbHelper.insertData(5,(int)obstacles.get(5).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(5).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle5));
                         isDragging = false;
                         break;
                     default:
@@ -539,6 +664,196 @@ public class SecondFragment extends Fragment {
             }
         });
 
+        obstacle6.setOnTouchListener(new View.OnTouchListener() {
+            int x = 0;
+            int y = 0;
+            int dx = 0;
+            int dy = 0;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!isObstacle6LongClicked) {
+                    if(event.getAction() == MotionEvent.ACTION_UP){
+                        obstacle6.getChildAt(1).setPivotX(obstacle6.getWidth()/2.0f);
+                        obstacle6.getChildAt(1).setPivotY(obstacle6.getHeight()/2.0f);
+
+                        obstacle6.getChildAt(1).setRotation((obstacle6.getChildAt(1).getRotation() + 90) % 360);
+
+                    }
+                    return false;
+                }
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        x = (int) event.getX();
+                        y = (int) event.getY();
+                        isDragging = true;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        dx = (int) event.getX() - x;
+                        dy = (int) event.getY() - y;
+
+                        obstacle6.setX(obstacle6.getX() + dx);
+                        obstacle6.setY(obstacle6.getY() + dy);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        int snapToX = ((int) ((obstacle6.getX() + SNAP_GRID_INTERVAL / 2) / SNAP_GRID_INTERVAL)) * SNAP_GRID_INTERVAL;
+                        int snapToY = ((int) ((obstacle6.getY() + SNAP_GRID_INTERVAL / 2) / SNAP_GRID_INTERVAL)) * SNAP_GRID_INTERVAL;
+                        obstacle6.setX(snapToX);
+                        obstacle6.setY(snapToY);
+                        isObstacle6LongClicked = false;
+
+                        sendObstaclesOneTime(6);
+                        dbHelper.insertData(6,(int)obstacles.get(6).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(6).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle6));
+                        isDragging = false;
+                        break;
+                    default:
+                        break;
+                }
+
+                if(obstacle6.getX() > maxWidth){
+                    obstacle6.setX(maxWidth);
+                }
+                else if(obstacle6.getX() < 0){
+                    obstacle6.setX(0);
+                }
+                if(obstacle6.getY() > maxHeight){
+                    obstacle6.setY(maxHeight);
+                }
+                else if(obstacle6.getY() < 0){
+                    obstacle6.setY(0);
+                }
+
+                return false;
+            }
+        });
+
+        obstacle7.setOnTouchListener(new View.OnTouchListener() {
+            int x = 0;
+            int y = 0;
+            int dx = 0;
+            int dy = 0;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!isObstacle7LongClicked) {
+                    if(event.getAction() == MotionEvent.ACTION_UP){
+                        obstacle7.getChildAt(1).setPivotX(obstacle7.getWidth()/2.0f);
+                        obstacle7.getChildAt(1).setPivotY(obstacle7.getHeight()/2.0f);
+
+                        obstacle7.getChildAt(1).setRotation((obstacle7.getChildAt(1).getRotation() + 90) % 360);
+
+                    }
+                    return false;
+                }
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        x = (int) event.getX();
+                        y = (int) event.getY();
+                        isDragging = true;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        dx = (int) event.getX() - x;
+                        dy = (int) event.getY() - y;
+
+                        obstacle7.setX(obstacle7.getX() + dx);
+                        obstacle7.setY(obstacle7.getY() + dy);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        int snapToX = ((int) ((obstacle7.getX() + SNAP_GRID_INTERVAL / 2) / SNAP_GRID_INTERVAL)) * SNAP_GRID_INTERVAL;
+                        int snapToY = ((int) ((obstacle7.getY() + SNAP_GRID_INTERVAL / 2) / SNAP_GRID_INTERVAL)) * SNAP_GRID_INTERVAL;
+                        obstacle7.setX(snapToX);
+                        obstacle7.setY(snapToY);
+                        isObstacle7LongClicked = false;
+
+                        sendObstaclesOneTime(7);
+                        dbHelper.insertData(7,(int)obstacles.get(7).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(7).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle7));
+                        isDragging = false;
+                        break;
+                    default:
+                        break;
+                }
+
+                if(obstacle7.getX() > maxWidth){
+                    obstacle7.setX(maxWidth);
+                }
+                else if(obstacle7.getX() < 0){
+                    obstacle7.setX(0);
+                }
+                if(obstacle7.getY() > maxHeight){
+                    obstacle7.setY(maxHeight);
+                }
+                else if(obstacle7.getY() < 0){
+                    obstacle7.setY(0);
+                }
+
+                return false;
+            }
+        });
+
+        obstacle8.setOnTouchListener(new View.OnTouchListener() {
+            int x = 0;
+            int y = 0;
+            int dx = 0;
+            int dy = 0;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (!isObstacle8LongClicked) {
+                    if(event.getAction() == MotionEvent.ACTION_UP){
+                        obstacle8.getChildAt(1).setPivotX(obstacle8.getWidth()/2.0f);
+                        obstacle8.getChildAt(1).setPivotY(obstacle8.getHeight()/2.0f);
+
+                        obstacle8.getChildAt(1).setRotation((obstacle8.getChildAt(1).getRotation() + 90) % 360);
+
+                    }
+                    return false;
+                }
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        x = (int) event.getX();
+                        y = (int) event.getY();
+                        isDragging = true;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        dx = (int) event.getX() - x;
+                        dy = (int) event.getY() - y;
+
+                        obstacle8.setX(obstacle8.getX() + dx);
+                        obstacle8.setY(obstacle8.getY() + dy);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        int snapToX = ((int) ((obstacle8.getX() + SNAP_GRID_INTERVAL / 2) / SNAP_GRID_INTERVAL)) * SNAP_GRID_INTERVAL;
+                        int snapToY = ((int) ((obstacle8.getY() + SNAP_GRID_INTERVAL / 2) / SNAP_GRID_INTERVAL)) * SNAP_GRID_INTERVAL;
+                        obstacle8.setX(snapToX);
+                        obstacle8.setY(snapToY);
+                        isObstacle8LongClicked = false;
+
+
+                        sendObstaclesOneTime(8);
+                        dbHelper.insertData(8,(int)obstacles.get(8).getX()/SNAP_GRID_INTERVAL, 19-(int)obstacles.get(8).getY()/SNAP_GRID_INTERVAL,getViewOrientation(obstacle8));
+                        isDragging = false;
+                        break;
+                    default:
+                        break;
+                }
+
+                if(obstacle8.getX() > maxWidth){
+                    obstacle8.setX(maxWidth);
+                }
+                else if(obstacle8.getX() < 0){
+                    obstacle8.setX(0);
+                }
+                if(obstacle8.getY() > maxHeight){
+                    obstacle8.setY(maxHeight);
+                }
+                else if(obstacle8.getY() < 0){
+                    obstacle8.setY(0);
+                }
+
+                return false;
+            }
+        });
+
         // Buttons and Objects initialization
         sendObstaclesButton = getActivity().findViewById(R.id.sendObstaclesButton);
         resetObstacles = getActivity().findViewById(R.id.resetObstaclesButton);
@@ -550,6 +865,9 @@ public class SecondFragment extends Fragment {
         leftReverseButton = getActivity().findViewById(R.id.leftReverseButton);
         rightReverseButton = getActivity().findViewById(R.id.rightReverseButton);
         robot_status = getActivity().findViewById(R.id.RobotStatus);
+        startmessage = getActivity().findViewById(R.id.Startstr);
+        putObstacles = getActivity().findViewById(R.id.setObstaclesBtn);
+        startbtn = getActivity().findViewById(R.id.startbtn);
 
         //set ImageButton resource
         forwardButton.setImageResource(R.drawable.forward);
@@ -573,31 +891,42 @@ public class SecondFragment extends Fragment {
         turnLeftButton.setOnClickListener(view -> turnLeftButtonEvent());
         leftReverseButton.setOnClickListener(view -> LeftReverseButton());
         rightReverseButton.setOnClickListener(view -> RightReverseButton());
+        putObstacles.setOnClickListener(view -> putObstaclesButtonEvent());
+        startbtn.setOnClickListener(view -> startbtnEvent());
+
+
+
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        super.onSaveInstanceState(savedInstanceState);
-
-        savedInstanceState.putString("key", dataToSave);
-    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+    private void startbtnEvent(){
+        StringBuilder strBuilder =  new StringBuilder();
+        strBuilder.append("Start");
+        Toast.makeText(getActivity(), strBuilder.toString(), Toast.LENGTH_LONG).show();
+        byte[] bytes = strBuilder.toString().getBytes(Charset.defaultCharset());
+        BluetoothService.writeMsg(bytes);
+    }
 
     private void sendObstaclesEvent() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("beginImgRec:1")
-                .append(getObstacleString(obstacle1)).append(":2")
-                .append(getObstacleString(obstacle2)).append(":3")
-                .append(getObstacleString(obstacle3)).append(":4")
-                .append(getObstacleString(obstacle4)).append(":5")
-                .append(getObstacleString(obstacle5)).append(':');
-        //TODO: get things to be loop;
+        stringBuilder.append("beginImgRec:");
+
+        while(checkOBStr < 8){
+
+            if(!getObstacleString(checkOBStr + 1).equals("outside")){
+                stringBuilder.append(checkOBStr + 1).append(",")
+                        .append(getObstacleString(checkOBStr + 1))
+                        .append(":");
+            }
+            checkOBStr++;
+        }
+        checkOBStr = 0;
+//        //TODO: get things to be loop;
         Log.d("Sending Obstacles",stringBuilder.toString());
         Toast.makeText(getActivity(), stringBuilder.toString(), Toast.LENGTH_LONG).show();
 
@@ -613,8 +942,8 @@ public class SecondFragment extends Fragment {
         }
         else{
             strBuilder.append(obstacleNum).append(',')
-                    .append((int)obstacles.get(obstacleNum).getX()/SNAP_GRID_INTERVAL + 1).append(',')
-                    .append(20-(int)obstacles.get(obstacleNum).getY()/SNAP_GRID_INTERVAL)
+                    .append((int)obstacles.get(obstacleNum).getX()/SNAP_GRID_INTERVAL).append(',')
+                    .append(19-(int)obstacles.get(obstacleNum).getY()/SNAP_GRID_INTERVAL)
                     .append(',')
                     .append(getViewOrientation(obstacles.get(obstacleNum)));
         }
@@ -627,45 +956,41 @@ public class SecondFragment extends Fragment {
     private void resetObstaclesEvent(){
         countOs = 0;
 
-        while(countOs < 5){
+        while(countOs < 8){
             obstacles.get(countOs+1).setX(272+countOs*55);
-            obstacles.get(countOs+1).setY(873);
+            obstacles.get(countOs+1).setY(880);
 
             //rotate the yellow line to the initial state;
             obstacles.get(countOs+1).getChildAt(1).setRotation((360 - obstacles.get(countOs+1).getRotation()) % 360);
-            images.get(countOs+1).setImageResource(resources.get("o" + (countOs+1)));
+            //images.get(countOs+1).setImageResource(resources.get("o" + (countOs+1)));
 
             //clear the content for the TextView Box
             TextView obstacleID = (TextView)obstacles.get(countOs+1).getChildAt(2);
-            obstacleID.setText("");
+            obstacleID.setText(Integer.toString(countOs + 1));
 
             countOs++;
         }
+        dbHelper.Clean();
 
         Log.d("Action","Reset the positions of obstacles");
     }
 
     //This is used for send obstacles information one time;
-    private String getObstacleString(FrameLayout obstacle) {
+    private String getObstacleString(int obstacleNum) {
+
+        FrameLayout obstacle = obstacles.get(obstacleNum);
+
         if(obstacle.getY() > 19*SNAP_GRID_INTERVAL){
             //here is the message for RPI and algo to receive;
-            return
-                    //"O," +
-                    ',' +
-                            getViewOrientation(obstacle) +
-                            ',' +
-                            -1 +
-                            ',' +
-                            -1;
+            return "outside";
         }
         else{
             return
-                    //"O," +
-                    ',' + getViewOrientation(obstacle) +
+                    getViewOrientation(obstacle) +
                             ',' +
-                            ((int) obstacle.getX() / SNAP_GRID_INTERVAL + 1) +
+                            ((int) obstacle.getX() / SNAP_GRID_INTERVAL) +
                             ',' +
-                            (20 - ((int) obstacle.getY() / SNAP_GRID_INTERVAL));
+                            (19 - ((int) obstacle.getY() / SNAP_GRID_INTERVAL));
         }
     }
 
@@ -707,16 +1032,51 @@ public class SecondFragment extends Fragment {
     private void carClickEvent() {
         //for testing
         updateRobotPosition(0, 0, 'N');
-//        setObstacleID(1,"12");
-//        setObstacleID(2,"22");
-//        setObstacleID(3,"45");
-//        setObstacleID(4,"101");
-//        setObstacleID(5,"20");
 
-        String string = "Car (X: " + (int)car.getX()/SNAP_GRID_INTERVAL + ") " +
-                "(Y: " + (20 - ((int)car.getY() + car.getHeight())/SNAP_GRID_INTERVAL) + ") " +
-                "Facing: " + getImageOrientation(car);
-        Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
+//        String string = "Car (X: " + (int)car.getX()/SNAP_GRID_INTERVAL + ") " +
+//                "(Y: " + (20 - ((int)car.getY() + car.getHeight())/SNAP_GRID_INTERVAL) + ") " +
+//                "Facing: " + getImageOrientation(car);
+//        Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
+
+        byte[] bytes = startmessage.getText().toString().getBytes(Charset.defaultCharset());
+        BluetoothService.writeMsg(bytes);
+
+        if(!dbHelper.checkEmpty()){
+            List<Obstacle> dataList = dbHelper.getAllData();
+
+            // Now, you have a list of Obstacle objects containing the retrieved data
+            for (Obstacle data : dataList) {
+                int id = data.getId();
+                int x = data.getX();
+                int y = data.getY();
+                String direction = data.getDirection();
+
+                // Do something with the retrieved data, such as displaying it in your app
+                obstacles.get(id).setX(x*SNAP_GRID_INTERVAL);
+                obstacles.get(id).setY((19-y)*SNAP_GRID_INTERVAL);
+                Log.d("OBx", x +","+y);
+                obstacles.get(id).getChildAt(1).setPivotX(obstacles.get(id).getWidth()/2.0f);
+                obstacles.get(id).getChildAt(1).setPivotY(obstacles.get(id).getHeight()/2.0f);
+                switch(direction){
+                    case "n":
+                        obstacles.get(id).getChildAt(1).setRotation(0);
+                        break;
+                    case "e":
+                        obstacles.get(id).getChildAt(1).setRotation(90);
+                        break;
+                    case "s":
+                        obstacles.get(id).getChildAt(1).setRotation(180);
+                        break;
+                    case "w":
+                        obstacles.get(id).getChildAt(1).setRotation(270);
+                        break;
+                }
+                // For example, you can log the data:
+                Log.d("ObstacleData", "ID: " + id + ", X: " + x + ", Y: " + y + ", Direction: " + direction);
+            }
+        }
+
+        //Toast.makeText(getActivity(), "sent successfully!",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -1308,25 +1668,23 @@ public class SecondFragment extends Fragment {
     private void setObstacleID(int obstacleNumber, String imageID){
         TextView obstacleID = (TextView)obstacles.get(obstacleNumber).getChildAt(2);
         obstacleID.setText(imageID);
-        images.get(obstacleNumber).setImageResource(R.drawable.updated_background);
-
-        return;
+        //images.get(obstacleNumber).setImageResource(R.drawable.updated_background);
     }
 
     //This will be used if images need to be updated;
-    private void setObstacleImage(int obstacleNumber, String image) {
-        // If input values are invalid, log them and return
-        if (!images.containsKey(obstacleNumber) || !resources.containsKey(image)) {
-            Log.d("Set Obstacle Image", "obstacleNumber = " + obstacleNumber);
-            Log.d("Set Obstacle Image", "image = " + image);
-            return;
-        }
-
-        images.get(obstacleNumber).setImageResource(resources.get(image));
-        images.get(obstacleNumber).setRotation(0);
-
-
-    }
+//    private void setObstacleImage(int obstacleNumber, String image) {
+//        // If input values are invalid, log them and return
+//        if (!images.containsKey(obstacleNumber) || !resources.containsKey(image)) {
+//            Log.d("Set Obstacle Image", "obstacleNumber = " + obstacleNumber);
+//            Log.d("Set Obstacle Image", "image = " + image);
+//            return;
+//        }
+//
+//        images.get(obstacleNumber).setImageResource(resources.get(image));
+//        images.get(obstacleNumber).setRotation(0);
+//
+//
+//    }
 
     //private void updateRobot(int x, int y, char direction, String status){}
     //otherwise maybe get another receiver case to get status;
@@ -1367,6 +1725,30 @@ public class SecondFragment extends Fragment {
     private void updateRobotStatus(String status){
         String newStatus = "RobotStatus: " + status;
         robot_status.setText(newStatus);
+    }
+
+    //set a Dialog caller
+    public void showMyDialog() {
+        PutObstaclesDialog dialogFragment = new PutObstaclesDialog();
+        dialogFragment.setTargetFragment(this, 0); // Set the target fragment
+        dialogFragment.show(getFragmentManager(), "MyDialogFragment");
+    }
+
+    // Receive values from the dialog and update the FrameLayout position
+    public void applyValues(String obsnum, String xValue, String yValue) {
+        // Parse the values and update the FrameLayout position
+        // For example:
+        float x = Float.parseFloat(xValue);
+        float y = Float.parseFloat(yValue);
+        int obnum = Integer.parseInt(obsnum);
+        obstacles.get(obnum).setX(x*SNAP_GRID_INTERVAL);
+        obstacles.get(obnum).setY((20-y)*SNAP_GRID_INTERVAL);
+
+        sendObstaclesOneTime(obnum);
+    }
+
+    private void putObstaclesButtonEvent(){
+        showMyDialog();
     }
 
     //Broadcast Receiver for incoming message
@@ -1427,6 +1809,9 @@ public class SecondFragment extends Fragment {
 
                             byte[] bytes = stringBack.toString().getBytes(Charset.defaultCharset());
                             BluetoothService.writeMsg(bytes);
+                            robot_status.setText(stringBack);
+
+                            stringBack.setLength(0);
 
                             checkUpdate[obstacleNumber - 1] = imageID;
                         }
