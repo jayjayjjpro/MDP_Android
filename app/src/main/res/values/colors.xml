@@ -34,5 +34,6 @@
     <color name="light_blue_A700">#0091EA</color>
     <color name="black_overlay">#000000</color>
     <color name="yellow_color">#FFFF00</color>
+    <color name="fully_transparent_color">#00FF0000</color>
 
 </resources>

@@ -36,6 +36,7 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.example.mdptest.DBHelper;
 
@@ -61,84 +62,40 @@ public class SecondFragment extends Fragment {
 
     private boolean isDragging = false;
 
-    private int sequence = 0;
 
     private String[] checkUpdate =new String[8];
     private int checki = 0;
     private int checkOBStr = 0;
 
-    Button sendObstaclesButton, startbtn;
+    Button sendObstaclesButton;
 
-    ImageButton resetObstacles, putObstacles;
+    ImageButton resetObstacles, putObstacles, startbtn, carGenerator,alertButton,musicButton;
 
     ImageButton forwardButton, turnLeftButton, turnRightButton,reverseButton, leftReverseButton, rightReverseButton;
 
-    ImageView image1, image2, image3, image4, image5, image6, image7, image8;
+    ImageView image1, image2, image3, image4, image5, zombieimage;
     FrameLayout obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6,obstacle7,obstacle8;
-    TextView robot_status;
-    float maxWidth, reloadx,reloady;
+    float maxWidth;
     float maxHeight;
     int countOs = 0;
     ImageView car;
     Map<Integer, FrameLayout> obstacles;
     Map<Integer, ImageView> images;
 
-    EditText startmessage;
 
     DBHelper dbHelper;
 
-//    Map<String, String> commands = new HashMap<String, String>() {{
-//        put("forward", "0100");
-//        put("reverse", "0101");
-//        put("turnLeft", "0902");
-//        put("turnRight", "0903");
-//    }};
+    Map<Integer, Integer> resources = new HashMap<Integer, Integer>() {{
 
-    Map<String, Integer> resources = new HashMap<String, Integer>() {{
-        put("o1", R.drawable.obstacle1);
+        put(1, R.drawable.pic_1);
+        put(2, R.drawable.pic_2);
+        put(3, R.drawable.pic_3);
+        put(4, R.drawable.pic_4);
+        put(5, R.drawable.pic_5);
+        put(6, R.drawable.pic_6);
+        put(7, R.drawable.pic_7);
+        put(8, R.drawable.pic_8);
 
-        put("o2", R.drawable.obstacle2);
-
-        put("o3", R.drawable.obstacle3);
-
-        put("o4", R.drawable.obstacle4);
-
-        put("o5", R.drawable.obstacle5);
-
-        put("1", R.drawable.number_1);
-        put("2", R.drawable.number_2);
-        put("3", R.drawable.number_3);
-        put("4", R.drawable.number_4);
-        put("5", R.drawable.number_5);
-        put("6", R.drawable.number_6);
-        put("7", R.drawable.number_7);
-        put("8", R.drawable.number_8);
-        put("9", R.drawable.number_9);
-
-        put("A", R.drawable.alphabet_a);
-        put("B", R.drawable.alphabet_b);
-        put("C", R.drawable.alphabet_c);
-        put("D", R.drawable.alphabet_d);
-        put("E", R.drawable.alphabet_e);
-        put("F", R.drawable.alphabet_f);
-        put("G", R.drawable.alphabet_g);
-        put("H", R.drawable.alphabet_h);
-        put("S", R.drawable.alphabet_s);
-        put("T", R.drawable.alphabet_t);
-        put("U", R.drawable.alphabet_u);
-        put("V", R.drawable.alphabet_v);
-        put("W", R.drawable.alphabet_w);
-        put("X", R.drawable.alphabet_x);
-        put("Y", R.drawable.alphabet_y);
-        put("Z", R.drawable.alphabet_z);
-
-        put("up", R.drawable.arrow_up);
-        put("down", R.drawable.arrow_down);
-        put("left", R.drawable.arrow_left);
-        put("right", R.drawable.arrow_right);
-
-        put("bulls", R.drawable.bullseye);
-        put("circle", R.drawable.circle);
     }};
 
 
@@ -149,13 +106,6 @@ public class SecondFragment extends Fragment {
         FrameLayout frameLayout1 = getView().findViewById(R.id.combo1);
         savedInstanceState.putFloat("test",frameLayout1.getX());
         savedInstanceState.putFloat("testY",frameLayout1.getY());
-//        countOs = 0;
-//        while(countOs < 8){
-//            savedInstanceState.putFloat("framelayout"+(countOs+1) + "x",obstacles.get(countOs+1).getX());
-//            savedInstanceState.putFloat("framelayout"+(countOs+1)+ "y",obstacles.get(countOs+1).getY());
-//            countOs++;
-//        }
-//        countOs = 0;
     }
 
     @Override
@@ -170,29 +120,6 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
-//        obstacle1 = getActivity().findViewById(R.id.combo1);
-//        if(savedInstanceState != null){
-//
-////            obstacle1 = getActivity().findViewById(R.id.combo1);
-//
-//            reloadx = savedInstanceState.getFloat("test");
-//            reloady = savedInstanceState.getFloat("testY");
-//            obstacle1.setX(reloadx);
-//            obstacle1.setY(reloady);
-
-//            countOs = 0;
-//            while(countOs < 8){
-//                reloadx = savedInstanceState.getFloat("framelayout"+(countOs+1)+"x");
-//                reloady = savedInstanceState.getFloat("framelayout"+(countOs+1)+"y");
-//
-//                obstacles.get(countOs+1).setX(reloadx);
-//                obstacles.get(countOs+1).setY(reloady);
-//                countOs++;
-//            }
-//            countOs = 0;
-//        }
-
-//        dbHelper.Clean(); // for test
         return binding.getRoot();
     }
 
@@ -232,47 +159,6 @@ public class SecondFragment extends Fragment {
             put(8, obstacle8);
         }};
 
-//        if(!dbHelper.checkEmpty()){
-//            List<Obstacle> dataList = dbHelper.getAllData();
-//
-//            // Now, you have a list of Obstacle objects containing the retrieved data
-//            for (Obstacle data : dataList) {
-//                int id = data.getId();
-//                int x = data.getX();
-//                int y = data.getY();
-//                String direction = data.getDirection();
-//
-//                // Do something with the retrieved data, such as displaying it in your app
-//                obstacles.get(id).setX(x*SNAP_GRID_INTERVAL);
-//                obstacles.get(id).setY((20-y)*SNAP_GRID_INTERVAL);
-//                switch(direction){
-//                    case "n": obstacles.get(id).getChildAt(1).setRotation(0);
-//                    case "e": obstacles.get(id).getChildAt(1).setRotation(90);
-//                    case "s": obstacles.get(id).getChildAt(1).setRotation(180);
-//                    case "w": obstacles.get(id).getChildAt(1).setRotation(270);
-//                }
-//                // For example, you can log the data:
-//                Log.d("ObstacleData", "ID: " + id + ", X: " + x + ", Y: " + y + ", Direction: " + direction);
-//            }
-//        }
-
-//        if(savedInstanceState != null){
-//            reloadx = savedInstanceState.getFloat("test");
-//            reloady = savedInstanceState.getFloat("testY");
-//            obstacle1.setX(reloadx);
-//            obstacle1.setY(reloady);
-
-//            countOs = 0;
-//            while(countOs < 8){
-//                reloadx = savedInstanceState.getFloat("framelayout"+(countOs+1)+"x");
-//                reloady = savedInstanceState.getFloat("framelayout"+(countOs+1)+"y");
-//
-//                obstacles.get(countOs+1).setX(reloadx);
-//                obstacles.get(countOs+1).setY(reloady);
-//                countOs++;
-//            }
-//            countOs = 0;
-//        }
 
         image1 = getActivity().findViewById(R.id.obstacle1);
         image2 = getActivity().findViewById(R.id.obstacle2);
@@ -864,10 +750,12 @@ public class SecondFragment extends Fragment {
         reverseButton = getActivity().findViewById(R.id.reverseButton);
         leftReverseButton = getActivity().findViewById(R.id.leftReverseButton);
         rightReverseButton = getActivity().findViewById(R.id.rightReverseButton);
-        robot_status = getActivity().findViewById(R.id.RobotStatus);
-        startmessage = getActivity().findViewById(R.id.Startstr);
         putObstacles = getActivity().findViewById(R.id.setObstaclesBtn);
         startbtn = getActivity().findViewById(R.id.startbtn);
+        carGenerator = getActivity().findViewById(R.id.car_generator);
+        alertButton = getActivity().findViewById(R.id.alertButton);
+        musicButton = getActivity().findViewById(R.id.musicButton);
+        zombieimage = getActivity().findViewById(R.id.combo_image);
 
         //set ImageButton resource
         forwardButton.setImageResource(R.drawable.forward);
@@ -876,10 +764,6 @@ public class SecondFragment extends Fragment {
         reverseButton.setImageResource(R.drawable.reverse);
         leftReverseButton.setImageResource(R.drawable.left_reverse);
         rightReverseButton.setImageResource(R.drawable.right_reverse);
-
-
-        //set TextView box scrollable
-        robot_status.setMovementMethod(new ScrollingMovementMethod());
 
         // Set button click events
         sendObstaclesButton.setOnClickListener(view -> sendObstaclesEvent());
@@ -893,6 +777,9 @@ public class SecondFragment extends Fragment {
         rightReverseButton.setOnClickListener(view -> RightReverseButton());
         putObstacles.setOnClickListener(view -> putObstaclesButtonEvent());
         startbtn.setOnClickListener(view -> startbtnEvent());
+        carGenerator.setOnClickListener(view -> carGeneratorEvent());
+        alertButton.setOnClickListener(view -> alertButtonEvent());
+        musicButton.setOnClickListener(view -> musicButtonEvent());
 
 
 
@@ -903,6 +790,29 @@ public class SecondFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void carGeneratorEvent(){
+        car.setImageResource(R.drawable.car);
+        updateRobotPosition(0, 0, 'N');
+    }
+
+    private void alertButtonEvent(){
+        Random random = new Random();
+        int max = 8;
+        int rannum = random.nextInt(max) + 1;
+        zombieimage.setImageResource(resources.get(rannum));
+        if(rannum == 5){
+            zombieimage.setX(13*SNAP_GRID_INTERVAL);
+            zombieimage.setY(10*SNAP_GRID_INTERVAL);
+        }
+        else{
+            zombieimage.setX((float)8.5*SNAP_GRID_INTERVAL);
+            zombieimage.setY(13*SNAP_GRID_INTERVAL);
+        }
+    }
+    private void musicButtonEvent(){
+        zombieimage.setImageResource(0);
     }
     private void startbtnEvent(){
         StringBuilder strBuilder =  new StringBuilder();
@@ -957,8 +867,8 @@ public class SecondFragment extends Fragment {
         countOs = 0;
 
         while(countOs < 8){
-            obstacles.get(countOs+1).setX(272+countOs*55);
-            obstacles.get(countOs+1).setY(880);
+            obstacles.get(countOs+1).setX((float)(2.5*(1 + countOs) - 1.5)*SNAP_GRID_INTERVAL);
+            obstacles.get(countOs+1).setY(21*SNAP_GRID_INTERVAL);
 
             //rotate the yellow line to the initial state;
             obstacles.get(countOs+1).getChildAt(1).setRotation((360 - obstacles.get(countOs+1).getRotation()) % 360);
@@ -1011,35 +921,11 @@ public class SecondFragment extends Fragment {
         }
     }
 
-    //This is used to get the car direction;
-    private String getImageOrientation(ImageView car) {
-        switch (((int) ((car.getRotation() / 90) % 4 + 4) % 4)) {
-            case 0:
-                return "N";
-            case 1:
-                return "E";
-            case 2:
-                return "S";
-            case 3:
-                return "W";
-            default:
-                // Shouldn't reach this case
-                return "X";
-        }
-    }
-
     //This can reset the car position and also can be used to test some methods;
     private void carClickEvent() {
         //for testing
         updateRobotPosition(0, 0, 'N');
 
-//        String string = "Car (X: " + (int)car.getX()/SNAP_GRID_INTERVAL + ") " +
-//                "(Y: " + (20 - ((int)car.getY() + car.getHeight())/SNAP_GRID_INTERVAL) + ") " +
-//                "Facing: " + getImageOrientation(car);
-//        Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
-
-        byte[] bytes = startmessage.getText().toString().getBytes(Charset.defaultCharset());
-        BluetoothService.writeMsg(bytes);
 
         if(!dbHelper.checkEmpty()){
             List<Obstacle> dataList = dbHelper.getAllData();
@@ -1664,30 +1550,12 @@ public class SecondFragment extends Fragment {
         }
     }
 
-    //TODO: not set obstacle image, just set the target ID text in the white color;
+    //set the target ID text in the white color;
     private void setObstacleID(int obstacleNumber, String imageID){
         TextView obstacleID = (TextView)obstacles.get(obstacleNumber).getChildAt(2);
         obstacleID.setText(imageID);
-        //images.get(obstacleNumber).setImageResource(R.drawable.updated_background);
     }
 
-    //This will be used if images need to be updated;
-//    private void setObstacleImage(int obstacleNumber, String image) {
-//        // If input values are invalid, log them and return
-//        if (!images.containsKey(obstacleNumber) || !resources.containsKey(image)) {
-//            Log.d("Set Obstacle Image", "obstacleNumber = " + obstacleNumber);
-//            Log.d("Set Obstacle Image", "image = " + image);
-//            return;
-//        }
-//
-//        images.get(obstacleNumber).setImageResource(resources.get(image));
-//        images.get(obstacleNumber).setRotation(0);
-//
-//
-//    }
-
-    //private void updateRobot(int x, int y, char direction, String status){}
-    //otherwise maybe get another receiver case to get status;
     private void updateRobotPosition(int x, int y, char direction) {
 
         switch (direction) {
@@ -1719,12 +1587,6 @@ public class SecondFragment extends Fragment {
                 // Shouldn't reach this case
                 break;
         }
-    }
-
-    //This is used to receive the car status information;
-    private void updateRobotStatus(String status){
-        String newStatus = "RobotStatus: " + status;
-        robot_status.setText(newStatus);
     }
 
     //set a Dialog caller
@@ -1783,7 +1645,6 @@ public class SecondFragment extends Fragment {
                     //car status receiver part and corresponding textview box for this;
                     case "STATUS":
                         String status = message.substring((message.indexOf(',') + 1));
-                        updateRobotStatus(status);
                         break;
 
                     case "TARGET":
@@ -1809,7 +1670,6 @@ public class SecondFragment extends Fragment {
 
                             byte[] bytes = stringBack.toString().getBytes(Charset.defaultCharset());
                             BluetoothService.writeMsg(bytes);
-                            robot_status.setText(stringBack);
 
                             stringBack.setLength(0);
 

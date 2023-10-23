@@ -17,6 +17,26 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="600px"
+        android:src="@drawable/car_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.25" />
+
+    <ImageView
+        android:id="@+id/combo_image"
+        android:layout_width="120px"
+        android:layout_height="120px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <FrameLayout
         android:id="@+id/combo1"
@@ -24,10 +44,10 @@
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/combo2"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -57,11 +77,11 @@
         android:layout_width="40px"
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/combo3"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintEnd_toStartOf="@+id/combo4"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -91,10 +111,11 @@
         android:layout_width="40px"
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/combo4"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -125,10 +146,10 @@
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toEndOf="@+id/combo3"
+        app:layout_constraintHorizontal_bias="0.43"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -159,10 +180,10 @@
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.16"
         app:layout_constraintStart_toEndOf="@+id/combo4"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -193,10 +214,10 @@
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toEndOf="@+id/combo5"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -227,10 +248,10 @@
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toEndOf="@+id/combo6"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -261,10 +282,10 @@
         android:layout_height="40px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/combo7"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8">
+        app:layout_constraintVertical_bias="0.74">
 
         <!-- ImageView for the image -->
         <ImageView
@@ -293,13 +314,13 @@
         android:id="@+id/car"
         android:layout_width="120px"
         android:layout_height="120px"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.713"
-        app:srcCompat="@drawable/car" />
+        app:layout_constraintVertical_bias="0.584" />
 
     <Button
         android:id="@+id/sendObstaclesButton"
@@ -316,11 +337,11 @@
         android:id="@+id/resetObstaclesButton"
         android:layout_width="60px"
         android:layout_height="60px"
+        android:background="@color/fully_transparent_color"
         android:src="@drawable/refresh"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toEndOf="@+id/sendObstaclesButton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.89" />
@@ -329,31 +350,45 @@
         android:id="@+id/setObstaclesBtn"
         android:layout_width="60px"
         android:layout_height="60px"
+        android:background="@color/fully_transparent_color"
         android:src="@drawable/plus"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toEndOf="@+id/resetObstaclesButton"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.89" />
 
-    <Button
-        android:id="@+id/startbtn"
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:id="@+id/car_generator"
+        android:layout_width="60px"
         android:layout_height="60px"
-        android:text="Start"
+        android:background="@color/fully_transparent_color"
+        android:src="@drawable/car_generator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/setObstaclesBtn"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.89" />
 
+    <ImageButton
+        android:id="@+id/startbtn"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:background="@color/fully_transparent_color"
+        android:src="@drawable/start_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintStart_toEndOf="@+id/button_second"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.97" />
+
     <Button
         android:id="@+id/button_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="180px"
+        android:layout_height="80px"
         android:text="Previous"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -365,103 +400,99 @@
         android:id="@+id/forwardButton"
         android:layout_width="60px"
         android:layout_height="60px"
-        android:background="@color/white"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.109"
+        app:layout_constraintEnd_toStartOf="@+id/turnRightButton"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.873" />
+        app:layout_constraintVertical_bias="0.89" />
 
     <ImageButton
         android:id="@+id/turnLeftButton"
         android:layout_width="60px"
         android:layout_height="60px"
-        android:background="@color/white"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.028"
+        app:layout_constraintEnd_toStartOf="@+id/forwardButton"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.874" />
+        app:layout_constraintVertical_bias="0.89" />
 
     <ImageButton
         android:id="@+id/turnRightButton"
         android:layout_width="60px"
         android:layout_height="60px"
-        android:background="@color/white"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintEnd_toStartOf="@+id/sendObstaclesButton"
+        app:layout_constraintHorizontal_bias="0.87"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.874" />
+        app:layout_constraintVertical_bias="0.89" />
 
     <ImageButton
         android:id="@+id/reverseButton"
         android:layout_width="60px"
         android:layout_height="60px"
-        android:background="@color/white"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.109"
+        app:layout_constraintEnd_toStartOf="@+id/rightReverseButton"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.941" />
+        app:layout_constraintVertical_bias="0.97" />
 
     <ImageButton
         android:id="@+id/leftReverseButton"
         android:layout_width="60px"
         android:layout_height="60px"
-        android:background="@color/white"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.028"
+        app:layout_constraintEnd_toStartOf="@+id/reverseButton"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.941" />
+        app:layout_constraintVertical_bias="0.97" />
 
     <ImageButton
         android:id="@+id/rightReverseButton"
         android:layout_width="60px"
         android:layout_height="60px"
-        android:background="@color/white"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintEnd_toStartOf="@+id/button_second"
+        app:layout_constraintHorizontal_bias="0.87"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.94" />
+        app:layout_constraintVertical_bias="0.97" />
 
-    <TextView
-        android:id="@+id/RobotStatus"
-        android:layout_width="240px"
-        android:layout_height="40px"
-        android:background="@color/white"
-        android:scrollbars="vertical|horizontal"
-        android:text="RobotStatus: None"
-        android:textSize="24sp"
+    <ImageButton
+        android:id="@+id/alertButton"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:src="@drawable/alert"
+        android:background="@color/fully_transparent_color"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/startbtn"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.961"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintVertical_bias="0.97" />
 
-    <EditText
-        android:id="@+id/Startstr"
-        android:layout_width="205dp"
-        android:layout_height="71dp"
-        android:layout_weight=".8"
-        android:gravity="bottom"
-        android:hint="send obstalces info"
-        android:inputType="textMultiLine"
-        android:singleLine="true"
+    <ImageButton
+        android:id="@+id/musicButton"
+        android:layout_width="60px"
+        android:layout_height="60px"
+        android:background="@color/fully_transparent_color"
+        android:src="@drawable/music_notes"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alertButton"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/button_second"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.99" />
+        app:layout_constraintVertical_bias="0.97" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
