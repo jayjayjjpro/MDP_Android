@@ -1604,7 +1604,7 @@ public class SecondFragment extends Fragment {
         float y = Float.parseFloat(yValue);
         int obnum = Integer.parseInt(obsnum);
         obstacles.get(obnum).setX(x*SNAP_GRID_INTERVAL);
-        obstacles.get(obnum).setY((20-y)*SNAP_GRID_INTERVAL);
+        obstacles.get(obnum).setY((19-y)*SNAP_GRID_INTERVAL);
 
         sendObstaclesOneTime(obnum);
     }

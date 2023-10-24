@@ -37,13 +37,14 @@ public class Grid extends View {
     @Override
     public void onDraw(Canvas canvas) {
 
-        Bitmap backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.zombie_back);
+        Bitmap backgroundImage = BitmapFactory.decodeResource(getResources(), R.drawable.ruin_back);
 
-        int centerX = (getWidth() - backgroundImage.getWidth()) / 2;
-        int centerY = (getHeight() - backgroundImage.getHeight()) / 2;
-
-        // Draw the background image
-        canvas.drawBitmap(backgroundImage, centerX, centerY, null);
+//        int centerX = (getWidth() - backgroundImage.getWidth()) / 2;
+//        int centerY = (getHeight() - backgroundImage.getHeight()) / 2;
+//
+//        // Draw the background image
+//        canvas.drawBitmap(backgroundImage, centerX, centerY, null);
+        canvas.drawBitmap(backgroundImage, 0, 0, null);
 
 //        // Draw the GIF if it's loaded
 //        if (gifDrawable != null) {
@@ -62,23 +63,23 @@ public class Grid extends View {
 
         // Draw vertical lines
         for (int i = 1; i < numberOfColumns; i++) {
-            canvas.drawLine(i * cellWidth, 0, i * cellWidth, numberOfRows * cellHeight, blackPaint);
+            canvas.drawLine(i * cellWidth, 0, i * cellWidth, numberOfRows * cellHeight, whitePaint);
         }
 
         // Draw horizontal lines
         for (int i = 1; i < numberOfRows; i++) {
-            canvas.drawLine(0, i * cellHeight, numberOfColumns * cellWidth, i * cellHeight, blackPaint);
+            canvas.drawLine(0, i * cellHeight, numberOfColumns * cellWidth, i * cellHeight, whitePaint);
         }
 
         // Draw vertical grid axis
         for (int i = 0; i < numberOfRows; i++) {
             //canvas.drawText(String.valueOf(i), cellWidth * 10 + 5, cellHeight * (numberOfRows - i - 1) + 15, whitePaint);
-            canvas.drawText(String.valueOf(i), cellWidth * 10 + 5, cellHeight * (numberOfRows - i - 1) + 15, blackPaint);
+            canvas.drawText(String.valueOf(i), cellWidth * 10 + 5, cellHeight * (numberOfRows - i - 1) + 15, whitePaint);
         }
 
         for (int i = 0; i < numberOfColumns; i++) {
             //canvas.drawText(String.valueOf(i), cellWidth * (i) + 5, cellHeight * 9 + 15, whitePaint);
-            canvas.drawText(String.valueOf(i), cellWidth * (i) + 5, cellHeight * 9 + 15, blackPaint);
+            canvas.drawText(String.valueOf(i), cellWidth * (i) + 5, cellHeight * 9 + 15, whitePaint);
         }
     }
 }
